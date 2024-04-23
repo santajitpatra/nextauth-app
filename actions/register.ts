@@ -4,6 +4,8 @@ import { RegisterFormSchema } from "@/schemas";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
+import { get } from "http";
+import { getUserByEmail } from "@/data/user";
 
 export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
   const validator = RegisterFormSchema.safeParse(values);
@@ -19,16 +21,14 @@ export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
   const isPasswordValid = password === confirmPassword;
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await prisma.user.findFirst({
-    where: {
-      email,
-    },
-  });
+  const existingUser = await getUserByEmail(email);
+
   if (existingUser) {
     return {
       error: "Email already exists",
     };
   }
+  
    if (!isPasswordValid) {
      return {
        error: "Passwords do not match",
