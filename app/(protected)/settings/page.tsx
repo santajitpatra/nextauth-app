@@ -1,13 +1,14 @@
 import { auth } from "@/auth";
 
 const page = async () => {
-  const session = await auth();
+ const session = await auth();
+ if (!session) return <div>Not authenticated</div>;
 
-  return (
-    <div>
-      {JSON.stringify(session)}
-    </div>
-  );
+ return (
+   <div>
+     <pre>{JSON.stringify(session, null, 2)}</pre>
+   </div>
+ );
 };
 
 export default page;
