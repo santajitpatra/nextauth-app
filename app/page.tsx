@@ -19,10 +19,10 @@ const Home = () => {
             "text-6xl font-semibold text-white drop-shadow-md"
           )}
         >
-            <span className="flex gap-x-2">
-              <FaLock />
-              Auth
-            </span>
+          <span className="flex items-center justify-center gap-x-2">
+            <FaLock />
+            Auth
+          </span>
         </h1>
         <p className="text-white text-lg">
           A simple authentication example using Next.js and Prisma.
