@@ -3,7 +3,7 @@ export const publicRoutes = ["/"];
 
 
 // Routes for authenticated access @type { string[] }
-export const authenticatedRoutes = ["/auth/login", "/auth/register"];
+export const authenticatedRoutes = ["/auth/login", "/auth/register", "/auth/error"];
 
 // API prefix @type { string }
 export const apiAuthPrefix = "/api/auth";
