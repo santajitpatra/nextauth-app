@@ -19,8 +19,15 @@ import { FormError } from "./FormError";
 import { FormSuccess } from "./FormSuccess";
 import { login } from "@/actions/login";
 import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "The email you are trying to sign in with has not been linked to any of your accounts."
+      : "";
+
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -38,13 +45,11 @@ export const LoginForm = () => {
     setSuccess("");
 
     startTransition(() => {
-          login(values).then((response) => {
-            if (response.error) {
-              setError(response.error);
-            } else {
-              setSuccess(response.success);
-            }
-          });
+      login(values).then((response) => {
+          setError(response?.error);
+          // TODO: Figure out how to get this to work.
+          // setSuccess(response.success);
+      });
     });
   };
 
@@ -83,20 +88,21 @@ export const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field}
-                    disabled={isPending}
-                    type="password" placeholder="********" />
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      type="password"
+                      placeholder="********"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
-          <Button 
-          disabled={isPending}
-           type="submit" className="w-full">
+          <Button disabled={isPending} type="submit" className="w-full">
             Login
           </Button>
         </form>
