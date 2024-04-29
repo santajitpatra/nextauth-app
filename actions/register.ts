@@ -4,8 +4,8 @@ import { RegisterFormSchema } from "@/schemas";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
-import { get } from "http";
 import { getUserByEmail } from "@/data/user";
+import { createVerificationToken } from "@/lib/tokens";
 
 export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
   const validator = RegisterFormSchema.safeParse(values);
@@ -42,6 +42,8 @@ export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
       password: hashedPassword,
     },
   });
+
+  const verificationToken = await createVerificationToken(email);
 
   return {
     success: "Successfully logged in",
