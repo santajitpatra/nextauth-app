@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { getUserByEmail } from "@/data/user";
 import { createVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
   const validator = RegisterFormSchema.safeParse(values);
@@ -16,8 +17,7 @@ export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
     };
   }
 
-  const { email, password, confirmPassword, name } =
-    validator.data;
+  const { email, password, confirmPassword, name } = validator.data;
   const isPasswordValid = password === confirmPassword;
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -28,12 +28,12 @@ export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
       error: "Email already exists",
     };
   }
-  
-   if (!isPasswordValid) {
-     return {
-       error: "Passwords do not match",
-     };
-   }
+
+  if (!isPasswordValid) {
+    return {
+      error: "Passwords do not match",
+    };
+  }
 
   await prisma.user.create({
     data: {
@@ -44,8 +44,9 @@ export const register = async (values: z.infer<typeof RegisterFormSchema>) => {
   });
 
   const verificationToken = await createVerificationToken(email);
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
   return {
-    success: "Successfully logged in",
+    success: "Confirmation email sent",
   };
 };
