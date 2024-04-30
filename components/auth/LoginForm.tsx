@@ -48,7 +48,7 @@ export const LoginForm = () => {
       login(values).then((response) => {
           setError(response?.error);
           // TODO: Figure out how to get this to work.
-          // setSuccess(response.success);
+          setSuccess(response?.success);
       });
     });
   };
