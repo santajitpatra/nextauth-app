@@ -1,8 +1,8 @@
 /**
 // Routes for public access @type { string[] }
  *
- */ 
-export const publicRoutes = ["/"];
+ */
+export const publicRoutes = ["/", "/auth/verify"];
 
 /**
 // Routes for authenticated access @type { string[] }
