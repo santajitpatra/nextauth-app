@@ -12,6 +12,8 @@ export const authenticatedRoutes = [
   "/auth/login",
   "/auth/register",
   "/auth/error",
+  "/auth/reset",
+  "/auth/reset-password",
 ];
 
 /**
