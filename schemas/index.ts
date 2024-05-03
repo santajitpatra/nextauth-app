@@ -1,5 +1,12 @@
 import * as z from "zod";
 
+
+export const NewPasswordSchema = z.object({
+   password: z.string().min(4, {
+    message: "Password must be at least 4 characters",
+  }),
+});
+
 export const ResetFormSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address",
@@ -11,7 +18,7 @@ export const LoginFormSchema = z.object({
     message: "Please enter a valid email address",
   }),
   password: z.string().min(4, {
-    message: "Password must be at least 6 characters",
+    message: "Password must be at least 4 characters",
   }),
 });
 
@@ -20,10 +27,10 @@ export const RegisterFormSchema = z.object({
     message: "Please enter a valid email address",
   }),
   password: z.string().min(4, {
-    message: "Password must be at least 6 characters",
+    message: "Password must be at least 4 characters",
   }),
   confirmPassword: z.string().min(4, {
-    message: "Password must be at least 6 characters",
+    message: "Password must be at least 4 characters",
   }),
   name: z
     .string()
