@@ -20,6 +20,7 @@ export const LoginFormSchema = z.object({
   password: z.string().min(4, {
     message: "Password must be at least 4 characters",
   }),
+  code: z.optional(z.string()),
 });
 
 export const RegisterFormSchema = z.object({
