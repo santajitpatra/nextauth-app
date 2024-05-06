@@ -28,12 +28,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account?.provider !== "credentials") return true;
 
       const existingUser = await getUserById(user.id);
-      
+
       //Prevent sign in if user has not verified their email
       if (!existingUser?.emailVerified) return false;
 
       if (existingUser.isTwoFactorEnabled) {
-        const twoFactorConfirmation = await getTwoFactorcomfirmationById(existingUser.id)
+        const twoFactorConfirmation = await getTwoFactorcomfirmationById(
+          existingUser.id
+        );
 
         if (!twoFactorConfirmation) return false;
 
@@ -43,7 +45,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             id: twoFactorConfirmation.id,
           },
         });
-       
       }
 
       return true;
@@ -57,6 +58,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = token.role;
       }
 
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+      }
+
       return session;
     },
     async jwt({ token }) {
@@ -67,6 +72,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (!existingUser) return token;
 
       token.role = existingUser.role;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
       return token;
     },
