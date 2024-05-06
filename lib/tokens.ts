@@ -6,7 +6,7 @@ import { getVerificationTokenByEmail } from "@/data/verification-token";
 
 export const createTwoFactorToken = async (email: string) => {
   const token = crypto.randomInt(100_000, 999_999).toString();
-  const expires = new Date(Date.now() + 1000 * 60 * 60);
+  const expires = new Date(Date.now() + 1000 * 60 * 5);
 
   const existingToken = await getTwoFactorTokenByEmail(email);
 
