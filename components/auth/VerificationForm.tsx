@@ -5,8 +5,8 @@ import { CardWrapper } from "./CardWrapper";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { verification } from "@/actions/verification";
-import { FormSuccess } from "./FormSuccess";
-import { FormError } from "./FormError";
+import { FormSuccess } from "../FormSuccess";
+import { FormError } from "../FormError";
 
 export const VerificationForm = () => {
   const [error, setError] = useState<string | undefined>();
