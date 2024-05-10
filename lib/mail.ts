@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 
 export const resend = new Resend(process.env.RESEND_API_KEY);
+const domain = process.env.NEXTAUTH_URL;
 
 export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   await resend.emails.send({
@@ -13,7 +14,7 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
   try {
-    const resetLink = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${token}`;
+    const resetLink = `${domain}/auth/reset-password?token=${token}`;
 
     await resend.emails.send({
       from: "onboarding@resend.dev",
@@ -28,7 +29,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 
 export const sendVerificationEmail = async (email: string, token: string) => {
   try {
-    const confirmLink = `${process.env.NEXTAUTH_URL}/auth/verify?token=${token}`;
+    const confirmLink = `${domain}/auth/verify?token=${token}`;
 
     await resend.emails.send({
       from: "onboarding@resend.dev",

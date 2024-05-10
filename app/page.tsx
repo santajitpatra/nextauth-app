@@ -28,7 +28,7 @@ const Home = () => {
           A simple authentication example using Next.js and Prisma.
         </p>
         <div>
-          <LoginButton>
+          <LoginButton mode="modal" asChild>
             <Button variant={"secondary"} size={"lg"}>
               Login
             </Button>

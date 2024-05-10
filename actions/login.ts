@@ -9,11 +9,13 @@ import prisma from "@/lib/prisma";
 import { createTwoFactorToken, createVerificationToken } from "@/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT_URL } from "@/routes";
 import { LoginFormSchema } from "@/schemas";
-import { create } from "domain";
 import { AuthError } from "next-auth";
 import { z } from "zod";
 
-export const login = async (values: z.infer<typeof LoginFormSchema>) => {
+export const login = async (
+  values: z.infer<typeof LoginFormSchema>,
+  callbackUrl?: string | null
+) => {
   const validator = LoginFormSchema.safeParse(values);
 
   if (!validator.success) {
@@ -46,7 +48,6 @@ export const login = async (values: z.infer<typeof LoginFormSchema>) => {
   }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
-    
     if (code) {
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
@@ -56,12 +57,12 @@ export const login = async (values: z.infer<typeof LoginFormSchema>) => {
         };
       }
 
-      if (twoFactorToken.token!== code) {
+      if (twoFactorToken.token !== code) {
         return {
           error: "Invalid code",
         };
       }
-      
+
       const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
       if (hasExpired) {
@@ -93,7 +94,6 @@ export const login = async (values: z.infer<typeof LoginFormSchema>) => {
           userId: existingUser.id,
         },
       });
-      
     } else {
       const twoFactorToken = await createTwoFactorToken(existingUser.email);
       await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
@@ -108,7 +108,7 @@ export const login = async (values: z.infer<typeof LoginFormSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT_URL,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT_URL,
     });
   } catch (error) {
     if (error instanceof AuthError) {
